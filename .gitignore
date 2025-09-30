@@ -65,12 +65,7 @@ Thumbs.db
 *.h5
 *.msgpack
 
-# ---------------------------
-# LangChain / vectorstore
-# ---------------------------
-*.faiss
-*.index
-*.pkl
+
 
 
 logs/
