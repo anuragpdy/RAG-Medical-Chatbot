@@ -1,0 +1,76 @@
+# ---------------------------
+# Python Bytecode
+# ---------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ---------------------------
+# Virtual environments
+# ---------------------------
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ---------------------------
+# Python package files
+# ---------------------------
+*.egg
+*.egg-info/
+RAG_Medcal_Chatbot.egg-info/
+
+dist/
+build/
+*.whl
+
+# ---------------------------
+# Logs and runtime
+# ---------------------------
+*.log
+*.sqlite3
+*.db
+*.pid
+*.sock
+
+# ---------------------------
+# OS files
+# ---------------------------
+.DS_Store
+Thumbs.db
+
+# ---------------------------
+# IDE/editor files
+# ---------------------------
+.vscode/
+.idea/
+*.iml
+
+# ---------------------------
+# Jupyter Notebook checkpoints
+# ---------------------------
+.ipynb_checkpoints/
+
+# ---------------------------
+# ML / LLM model files
+# ---------------------------
+*.pt
+*.pth
+*.bin
+*.onnx
+*.ckpt
+*.h5
+*.msgpack
+
+# ---------------------------
+# LangChain / vectorstore
+# ---------------------------
+*.faiss
+*.index
+*.pkl
+
+
+logs/
+vectorstore/

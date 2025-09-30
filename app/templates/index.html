@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🔍 AI Medical Chatbot</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      background: #f7f9fc;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .chat-container {
+      background: #fff;
+      max-width: 700px;
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(90deg, #3b82f6, #2563eb);
+      color: white;
+      padding: 1rem 1.5rem;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    #chat-box {
+      padding: 1rem;
+      flex-grow: 1;
+      overflow-y: auto;
+      max-height: 65vh;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
+      line-height: 1.5;
+      max-width: 80%;
+      word-wrap: break-word;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.3s ease forwards;
+      transition: transform 0.2s;
+    }
+
+    .message:hover {
+      transform: scale(1.02);
+    }
+
+    .user {
+      background: #dbeafe;
+      align-self: flex-end;
+      text-align: right;
+      border-bottom-right-radius: 0;
+      flex-direction: row-reverse;
+    }
+
+    .assistant {
+      background: #f3f4f6;
+      align-self: flex-start;
+      text-align: left;
+      border-bottom-left-radius: 0;
+    }
+
+    .icon {
+      font-size: 1.3rem;
+      margin-top: 0.1rem;
+    }
+
+    .timestamp {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 0.3rem;
+      display: block;
+    }
+
+    .typing {
+      font-style: italic;
+      color: #6b7280;
+      margin: 0.5rem 0 0.5rem 2rem;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    form {
+      padding: 1rem;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    textarea {
+      resize: none;
+      width: 100%;
+      height: 3.5rem;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px #93c5fd;
+    }
+
+    button {
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .send-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+    .send-btn:hover {
+      background: #1e40af;
+    }
+
+    .clear-btn {
+      background: #ef4444;
+      color: white;
+    }
+
+    .clear-btn:hover {
+      background: #b91c1c;
+    }
+
+    .error {
+      color: #ef4444;
+      padding: 0.5rem 1rem;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 600px) {
+      #chat-box {
+        max-height: 70vh;
+      }
+      .message {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <header>
+      <h1>🔍 AI Medical Chatbot</h1>
+    </header>
+
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <div id="chat-box">
+      {% for msg in messages %}
+        <div class="message {{ msg.role }}">
+          <span class="icon">
+            {% if msg.role == 'user' %}👤{% else %}🤖{% endif %}
+          </span>
+          <div>
+            <strong>{{ msg.role|capitalize }}:</strong><br />
+            {{ msg.content | safe | nl2br }}
+            <span class="timestamp">{{ msg.timestamp if msg.timestamp else "" }}</span>
+          </div>
+        </div>
+      {% endfor %}
+      <div id="typing-indicator" class="typing">🤖 Assistant is typing...</div>
+    </div>
+
+    <form id="chat-form" method="post" action="{{ url_for('index') }}">
+      <textarea id="chat-input" name="prompt" placeholder="Ask a medical question..." required></textarea>
+      <button type="submit" class="send-btn">Send</button>
+    </form>
+
+    <form method="get" action="{{ url_for('clear') }}">
+      <button type="submit" class="clear-btn">Clear Chat</button>
+    </form>
+  </div>
+
+  <script>
+    // Auto-scroll to bottom on page load
+    const chatBox = document.getElementById("chat-box");
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Typing indicator simulation (optional)
+    const typingIndicator = document.getElementById("typing-indicator");
+    function showTyping() {
+      typingIndicator.style.display = "block";
+      setTimeout(() => typingIndicator.style.display = "none", 2000);
+    }
+
+    // Enter-to-Send functionality
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+
+    chatInput.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault(); // Prevent newline
+        chatForm.submit(); // Submit form
+      }
+    });
+  </script>
+</body>
+</html>
