@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     // environment {
-    //     AWS_REGION = 'eu-north-1'
-    //     ECR_REPO = 'llmops/rag-medicalchatbot'
+    //     AWS_REGION = 'us-east-1'
+    //     ECR_REPO = 'my-repo'
     //     IMAGE_TAG = 'latest'
-    //     SERVICE_NAME = 'llmops-medical-rag-chatot-service'
+    //     SERVICE_NAME = 'llmops-medical-service'
     // }
 
     stages {
@@ -14,13 +14,13 @@ pipeline {
                 script {
                     echo 'Cloning GitHub repo to Jenkins...'
                     checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'git-hub-token', url: 'https://github.com/anuragpdy/RAG-Medical-Chatbot.git']])
-        }
+                }
             }
         }
 
         // stage('Build, Scan, and Push Docker Image to ECR') {
         //     steps {
-        //         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS EC2 Token']]) {
+        //         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-token']]) {
         //             script {
         //                 def accountId = sh(script: "aws sts get-caller-identity --query Account --output text", returnStdout: true).trim()
         //                 def ecrUrl = "${accountId}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ECR_REPO}"
@@ -60,6 +60,5 @@ pipeline {
         //         }
         //     }
         // }
-    // }
-}
     }
+}
