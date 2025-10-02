@@ -9,22 +9,15 @@ pipeline {
     // }
 
     stages {
+
         stage('Clone GitHub Repo') {
-                steps {
-                    script {
-                        echo 'GitHub repo already cloned by Jenkins SCM...'
-                        sh 'ls -la'  // Just to verify files are present
-                    }
+            steps {
+                script {
+                    echo 'Cloning GitHub repo to Jenkins...'
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'git-hub-token', url: 'https://github.com/anuragpdy/RAG-Medical-Chatbot.git']])
                 }
             }
-        // stage('Clone GitHub Repo') {
-        //     steps {
-        //         script {
-        //             echo 'Cloning GitHub repo to Jenkins...'
-        //             checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'git-hub-token', url: 'https://github.com/anuragpdy/RAG-Medical-Chatbot.git']])
-        //         }
-        //     }
-        // }
+        }
 
         // stage('Build, Scan, and Push Docker Image to ECR') {
         //     steps {
