@@ -14,7 +14,7 @@ pipeline {
             steps {
                 script {
                     echo 'Cloning GitHub repo to Jenkins...'
-                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'git-hub-token', url: 'https://github.com/anuragpdy/RAG-Medical-Chatbot.git']])
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-token', url: 'https://github.com/anuragpdy/RAG-Medical-Chatbot.git']])
                 }
             }
         }
