@@ -7,6 +7,6 @@ HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 DB_FAISS_PATH = "vectorstore/db_faiss"
-DATA_PATH = "data/"
+DATA_PATH = "C:/Users/Unnati/Desktop/Courses/GenAI Courses/LLMOps & AIOps/RAG Medical Chatbot/WorkingDirectory/RAG-Medical-Chatbot/data/"
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 50
